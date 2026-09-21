@@ -22,6 +22,8 @@ For recurring work, keep a small active portfolio and a queue. Allocate resource
 
 ## Reading a large collection
 
+When a baseline model is selected for incremental improvement, use [model-grafting.md](model-grafting.md). Each detailed reading should end with a transfer or skip decision against the current model, and promising candidates feed its persistent experiment queue.
+
 Index all relevant sources, then calibrate a small representative batch before increasing throughput. Each detailed record should explain the research question, central method or mechanism, assumptions, crucial comparisons, author-stated results, evidence locators, and what remains uncertain. Review the actual figures, equations and supplementary material when they carry the claim.
 
 After each useful batch, synthesize across papers. Compare how similarly named methods actually work and how differently named methods may share a mechanism. Preserve contradictory results and protocol differences. Store reusable ingredients with their prerequisites, not just model or module names.

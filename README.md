@@ -4,7 +4,24 @@
 
 Research Loop 是一个通用科研智能体 skill，把文献精读、跨论文综合、创新假设、实验与分析、独立评议、研究记忆和论文写作连接起来。研究领域、模型、机器、数据和预算由项目配置决定。
 
-[English](README_EN.md) · [核心技能](skills/research-loop/SKILL.md) · [来源与融合](docs/PROVENANCE.md) · [记录格式](skills/research-loop/references/memory.md)
+[English](README_EN.md) · [核心技能](skills/research-loop/SKILL.md) · [围绕基线融合模块](skills/research-loop/references/model-grafting.md) · [来源与融合](docs/PROVENANCE.md) · [记录格式](skills/research-loop/references/memory.md)
+
+## 围绕一个基线，逐篇读论文、逐步改模型
+
+例如选定 FB-CLIP 后，智能体先读懂并记录它的实际结构。随后每读一篇相关论文，都回答：**什么操作可以迁入？放在当前模型的哪里？需要适配什么接口？如何验证？** 将有希望的候选直接接到持续实验队列中。
+
+```text
+原始基线 B0
+  → 论文 P1 的模块 A：确定挂接位置 → 实验 → 保留有可信提升的 V1
+  → 论文 P2 的模块 B：针对 V1 再设计 → 实验 → 保留 V2
+  → 必要时引入或替换模块 C → 组合验证与消融 → 组织统一论文叙事
+```
+
+每次比较同时记录相对上一个版本和原始基线的变化；失败时保留已有最佳版本，并把失败条件写入记忆。模块可以来自不同领域，也可以替换基线组件。读取新论文时，同时检索已尝试的方案和模块之间的冲突。
+
+这种模式默认以 **最终保留 2～3 个模块改动** 为目标，可自行调整。同一位置的反复替换只算最终保留的一项；目标未达到就继续找候选或如实记录预算耗尽。达到目标后检查模块各自的作用与组合效果，再围绕有证据的贡献写故事。
+
+智能体维护基线结构图、模块迁移卡、候选队列、模型版本关系和当前最佳版本，跨会话继续推进。详细流程见 [model-grafting.md](skills/research-loop/references/model-grafting.md)，另附已核对官方代码位置的 [FB-CLIP 示例](skills/research-loop/references/fb-clip-example.md)；该示例尚未做实验复现。
 
 ## 工作方式
 
@@ -59,7 +76,19 @@ python skills/research-loop/scripts/validate_project.py --path ../my-study
 
 初始化只创建项目内的 `.research` 记录，不启动实验、不读取账户凭据。已有 `.research` 时拒绝覆盖。把项目放在代码仓库外，或保留 `.research/` 的忽略规则，避免把研究材料误当成技能源码发布。
 
-随后给智能体这样的任务：
+围绕一个模型持续融合时，接着初始化模型搜索记录：
+
+```bash
+python skills/research-loop/scripts/init_model_search.py --path ../my-study --baseline "FB-CLIP" --target-modules 2 3
+```
+
+这会创建 `.research/model-search/`，初始状态明确标记尚未精读和复现。该命令不会下载或训练 FB-CLIP。执行实验由智能体按已配置的环境、预算和用户授权推进。
+
+可以这样启动：
+
+> 使用 research-loop，以 FB-CLIP 为基线。先建立论文到代码的结构图并复现；之后每读一篇论文，都判断可迁入的模块及具体位置。逐项实验，有可信提升就更新当前最佳模型，再继续融合；目标保留 2～3 个模块改动，完成组合验证和消融后组织论文叙事。记录所有候选、失败条件和下一步，方便继续执行。
+
+也可以从通用研究问题开始：
 
 > 使用 research-loop，读取我的研究项目。先整理已有文献与结果，围绕当前条件提出三个可检验的候选，给出最近工作、最小区分实验与预算，并更新研究记忆。
 

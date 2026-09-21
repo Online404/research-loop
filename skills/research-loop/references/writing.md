@@ -2,6 +2,8 @@
 
 Establish the contribution before polishing. State the strongest supported conclusion, why it matters, and what evidence supports its scope. Then organize the manuscript around that argument.
 
+For baseline-centered module search, exploration may precede the narrative. After the retained combination is tested, connect the baseline's observed weakness, the modules' distinct roles and the resulting evidence into one argument. Module count is a configurable search target, not a novelty metric. Attribute transferred methods and use ablations/diagnostics to support their roles; do not retroactively describe an untested explanation as a prior prediction. See [model-grafting.md](model-grafting.md).
+
 ## Drafting order
 
 1. Build a claim–evidence map: each central claim points to a figure, table, analysis, experiment or verified source.

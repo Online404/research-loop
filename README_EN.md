@@ -4,7 +4,21 @@
 
 Research Loop is a general-purpose agent skill connecting literature reading, cross-paper synthesis, hypothesis discovery, bounded experiments or analyses, independent critique, research memory, and manuscript development. The project supplies its own discipline, resources, tools, and constraints.
 
-[中文](README.md) · [Skill](skills/research-loop/SKILL.md) · [Provenance](docs/PROVENANCE.md) · [Record format](skills/research-loop/references/memory.md)
+[中文](README.md) · [Skill](skills/research-loop/SKILL.md) · [Module transfer](skills/research-loop/references/model-grafting.md) · [Provenance](docs/PROVENANCE.md) · [Record format](skills/research-loop/references/memory.md)
+
+## Read around a baseline and improve it incrementally
+
+Select a baseline such as FB-CLIP and map its actual paper-to-code architecture. Every subsequent detailed paper reading ends with a decision: which operation can transfer, where it belongs in the current model, what interface adaptations it needs, and which experiment will decide whether to retain it.
+
+```text
+B0 -> transfer A -> compare and retain V1
+V1 -> transfer or replace B -> compare and retain V2
+V2 -> optional C -> combination checks and ablations -> manuscript argument
+```
+
+Track both gains over the parent and cumulative gains over B0. Keep the original baseline runnable, preserve the best eligible variant when an experiment fails, and retrieve prior failures before proposing another change. A candidate that helps B0 may conflict with the current model.
+
+This mode defaults to **2–3 retained module additions or replacements**, configurable by the user. Replacing the same block twice counts as one retained change. The count is a search target; it does not establish novelty or justify retaining a harmful change. Develop the final narrative from combination and ablation evidence. The architecture map, transfer cards, queue and variant lineage persist across sessions. See [model-grafting.md](skills/research-loop/references/model-grafting.md).
 
 ## What it integrates
 
@@ -35,6 +49,16 @@ python skills/research-loop/scripts/validate_project.py --path ../my-study
 ```
 
 Initialization creates `.research/project.json`, `STATE.md`, three memory ledgers, and an experiments directory. It does not launch an experiment or access credentials. Existing workspaces are preserved by refusing initialization over them.
+
+For incremental model development, initialize its additional records:
+
+```bash
+python skills/research-loop/scripts/init_model_search.py --path ../my-study --baseline "FB-CLIP" --target-modules 2 3
+```
+
+This creates `.research/model-search/` with explicitly unread/unreproduced baseline placeholders. It does not download or train the named model. Ask the agent:
+
+> Use research-loop with FB-CLIP as the baseline. Map its paper-to-code architecture and reproduce it. For each new paper, identify transferable modules and exact insertion or replacement sites. Run bounded comparisons in the configured environment, retain verified improvements and continue from the best variant. Aim for 2–3 retained changes, validate their combination and ablations, then build the paper's argument. Persist candidates, failures and the next action.
 
 Ask your agent:
 

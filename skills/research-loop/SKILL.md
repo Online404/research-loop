@@ -3,8 +3,9 @@ name: research-loop
 description: >-
   Run a reusable research cycle across disciplines: source-grounded literature reading,
   hypothesis discovery, bounded experiments or analyses, persistent evidence memory,
-  independent critique, and manuscript development. Use for a research agent, ongoing
-  research program, or resuming a study; also supports 科研智能体、创新构思、论文精读与实验闭环.
+  independent critique, and manuscript development. Includes baseline-centered module
+  transfer and cumulative model experiments. Use for a research agent, ongoing research
+  program, or resuming a study; also supports 科研智能体、围绕基线读论文、模块融合与替换.
 license: Apache-2.0
 ---
 
@@ -23,6 +24,15 @@ Produce a research decision backed by inspectable evidence, then leave enough st
    - [Independent review](references/review.md): evaluating plans, results, or manuscripts.
    - [Scientific writing](references/writing.md): drafting or revising prose.
    - [Optional integrations](references/integrations.md): invoking ARIS, nature-skills, or writing skills.
+   - [Baseline-centered module transfer](references/model-grafting.md): reading papers to improve a chosen model, locating insertion/replacement points, and accumulating experimentally supported changes.
+
+## When the user wants to build on a chosen model
+
+Use the baseline-centered mode when the user asks to read other papers for modules that can be introduced into a particular model, or to accumulate several improvements before writing. Read [model-grafting.md](references/model-grafting.md). Keep the original reproduced baseline and the current best variant in persistent memory. Every new detailed paper reading must end with a concrete transfer decision against that model, including the exact placement or the missing evidence needed to choose it.
+
+For this mode, default to a configurable target of **2–3 retained module additions or replacements**. Initialize its records with `scripts/init_model_search.py --path PROJECT --baseline NAME`. This is an architecture search objective, not proof of novelty or a reason to keep a harmful module. Advance from measured improvements under a stable selection protocol, retain the variant lineage, and develop the final narrative after combination and ablation evidence are available. Other research modes do not inherit this module-count target.
+
+On resumption, read `.research/model-search/search.json` and its `STATE.md` when present, then the relevant baseline, candidates and variants. Continue the next authorized, budgeted action; do not restart generic idea generation or require the user to approve each routine candidate already inside that scope.
 
 ## Core cycle
 
